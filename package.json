@@ -1,29 +1,34 @@
 {
-  "name": "sado",
-  "version": "0.1.0",
-  "description": "CLI toolkit combining cac (command parsing) + ora (terminal spinners)",
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
-    }
-  },
-  "files": [
-    "src"
-  ],
-  "scripts": {
-    "example": "bun run example.ts",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "cac": "^7.0.0",
-    "ora": "^9.4.0"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+	"name": "sado",
+	"version": "0.2.0",
+	"description": "CLI toolkit combining cac (command parsing) + ora (terminal spinners)",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"default": "./src/index.ts"
+		}
+	},
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"example": "bun run example.ts",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check --write",
+		"format": "biome format --write",
+		"test": "bun test",
+		"test:watch": "bun test --watch"
+	},
+	"dependencies": {
+		"cac": "^7.0.0",
+		"ora": "^9.4.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.16",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
 }
