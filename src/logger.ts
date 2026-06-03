@@ -1,3 +1,4 @@
+import { appendFileSync } from "node:fs";
 import logSymbols from "log-symbols";
 import color from "picocolors";
 
@@ -55,22 +56,12 @@ export interface Logger {
 export interface LoggerConfig {
 	level?: LogLevel;
 	tag?: string;
-}
-
-function write(
-	method: "log" | "error",
-	level: LogLevel,
-	currentLevel: LogLevel,
-	tag: string | undefined,
-	symbol: string,
-	message: string,
-	colorFn: (text: string) => string,
-	args: unknown[],
-): void {
-	if (LOG_LEVELS[level] > LOG_LEVELS[currentLevel]) return;
-
-	const prefix = tag ? `${color.dim(`[${tag}]`)} ` : "";
-	console[method](prefix + symbol, colorFn(message), ...args);
+	/** Optional file path to append log lines (plain text, no ANSI codes). */
+	file?: string;
+	/** Output function for stdout lines (default: console.log). */
+	stdout?: (message: string, ...args: unknown[]) => void;
+	/** Output function for stderr lines (default: console.error). */
+	stderr?: (message: string, ...args: unknown[]) => void;
 }
 
 /**
@@ -81,70 +72,98 @@ function write(
  * logger.success("Done!")
  */
 export function createLogger(config: LoggerConfig = {}): Logger {
-	const level = config.level ?? "info";
+	const state = { level: config.level ?? ("info" as LogLevel) };
 	const tag = config.tag;
+	const file = config.file;
+	const stdout = config.stdout ?? console.log;
+	const stderr = config.stderr ?? console.error;
+
+	function log(
+		method: "log" | "error",
+		threshold: LogLevel,
+		symbol: string,
+		message: string,
+		colorFn: (text: string) => string,
+		label: string,
+		args: unknown[],
+	): void {
+		if (LOG_LEVELS[threshold] > LOG_LEVELS[state.level]) return;
+
+		const prefix = tag ? `${color.dim(`[${tag}]`)} ` : "";
+		const output = method === "error" ? stderr : stdout;
+		output(prefix + symbol, colorFn(message), ...args);
+
+		if (file) {
+			const ts = new Date().toISOString();
+			const plainTag = tag ? ` [${tag}]` : "";
+			try {
+				appendFileSync(file, `${ts}${plainTag} ${label} ${message}\n`);
+			} catch {
+				// ignore file write errors
+			}
+		}
+	}
 
 	return {
-		level,
+		get level() {
+			return state.level;
+		},
+		set level(l: LogLevel) {
+			state.level = l;
+		},
 
 		info(message: string, ...args: unknown[]) {
-			write(
-				"log",
-				"info",
-				level,
-				tag,
-				logSymbols.info,
-				message,
-				color.white,
-				args,
-			);
+			log("log", "info", logSymbols.info, message, color.white, "INFO", args);
 		},
 
 		success(message: string, ...args: unknown[]) {
-			write(
+			log(
 				"log",
 				"info",
-				level,
-				tag,
 				logSymbols.success,
 				message,
 				color.green,
+				"SUCCESS",
 				args,
 			);
 		},
 
 		warn(message: string, ...args: unknown[]) {
-			write(
+			log(
 				"log",
 				"warn",
-				level,
-				tag,
 				logSymbols.warning,
 				message,
 				color.yellow,
+				"WARN",
 				args,
 			);
 		},
 
 		error(message: string, ...args: unknown[]) {
-			write(
+			log(
 				"error",
 				"error",
-				level,
-				tag,
 				logSymbols.error,
 				message,
 				color.red,
+				"ERROR",
 				args,
 			);
 		},
 
 		debug(message: string, ...args: unknown[]) {
-			write("log", "debug", level, tag, "", message, color.dim, args);
+			log("log", "debug", "", message, color.dim, "DEBUG", args);
 		},
 
 		withTag(newTag: string): Logger {
-			return createLogger({ level, tag: newTag });
+			return createLogger({
+				level: state.level,
+				tag: newTag,
+				file,
+				stdout: config.stdout,
+				stderr: config.stderr,
+			});
 		},
 	};
 }
