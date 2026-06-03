@@ -32,4 +32,6 @@ export { default as color } from "picocolors";
 // Re-export boxen with preset methods for styled boxes
 export { boxen } from "./boxen.js";
 export { CoraCommand, wrapWithSpinner } from "./command.js";
+// Export the native logger
+export { createLogger, logger } from "./logger.js";
 export { program } from "./program.js";

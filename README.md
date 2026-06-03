@@ -41,6 +41,7 @@ cli.parse()
 - **Interactive input** — re-exports `@clack/prompts` for text, select, confirm, and more
 - **Log symbols** — re-exports `log-symbols` with colored info/success/warning/error symbols
 - **Styled boxes** — re-exports `boxen` with success/error/warning/info preset methods
+- **Native logger** — composable `logger` with info/success/warn/error/debug levels and tagging
 - **Fully typed** — written in TypeScript with complete type definitions
 
 ## Installation
@@ -171,6 +172,51 @@ console.log(boxen('Custom message', { borderStyle: 'double', borderColor: 'cyan'
 | `boxen.warning()` | Yellow |
 | `boxen.info()` | Blue |
 | `boxen()` (no method) | None (default) |
+
+### Logger
+
+kowu-cli ships a native `logger` built from its own building blocks — `color` for styling and `logSymbols` for severity symbols. Log levels let you control verbosity.
+
+```ts
+import { logger } from 'kowu-cli'
+
+logger.success('Deployment complete!')
+logger.error('Connection refused', err)
+logger.warn('Disk space low')
+logger.info('Server started on port 3000')
+logger.debug('Parsed config:', config)
+```
+
+| Method | Output | Level threshold |
+|---|---|---|
+| `logger.success()` | ✔ ... (green) | info |
+| `logger.error()` | ✖ ... (red, stderr) | error |
+| `logger.warn()` | ⚠ ... (yellow) | warn |
+| `logger.info()` | ℹ ... (blue) | info |
+| `logger.debug()` | ... (dim) | debug |
+
+Tag a logger to prefix messages with a context label:
+
+```ts
+const db = logger.withTag('db')
+db.info('Connected')   // [db] ℹ Connected
+```
+
+Control verbosity by setting the level:
+
+```ts
+logger.level = 'warn'           // suppress info/debug
+logger.level = 'silent'         // suppress everything
+```
+
+You can also create independent loggers:
+
+```ts
+import { createLogger } from 'kowu-cli'
+
+const custom = createLogger({ level: 'debug', tag: 'my-app' })
+custom.info('Custom logger')
+```
 
 ### Interactive user input
 
@@ -406,4 +452,5 @@ bun run examples/user-input.ts setup
 bun run examples/log-symbols.ts show
 bun run examples/boxen.ts show
 bun run examples/error-handling.ts fetch
+bun run examples/logger.ts all
 ```
