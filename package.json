@@ -1,19 +1,20 @@
 {
 	"name": "sado",
-	"version": "0.7.0",
-	"description": "CLI toolkit combining cac (command parsing) + ora (terminal spinners)",
+	"version": "0.8.0",
+	"description": "CLI toolkit combining cac (command parsing) + ora (spinners) + picocolors (colors) + @clack/prompts (input) + log-symbols + boxen",
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./src/index.ts",
-			"default": "./src/index.ts"
+			"types": "./dist/index.d.mts",
+			"default": "./dist/index.mjs"
 		}
 	},
+	"types": "./dist/index.d.mts",
 	"files": [
-		"src"
+		"dist"
 	],
 	"scripts": {
-		"example": "bun run example.ts",
+		"build": "tsdown",
 		"typecheck": "tsc --noEmit",
 		"lint": "biome check --write",
 		"format": "biome format --write",
@@ -30,7 +31,35 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",
-		"@types/bun": "latest"
+		"@types/bun": "latest",
+		"tsdown": "^0.22.1"
+	},
+	"license": "MIT",
+	"author": "zfadhli",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/zfadhli/sado.git"
+	},
+	"bugs": {
+		"url": "https://github.com/zfadhli/sado/issues"
+	},
+	"homepage": "https://github.com/zfadhli/sado#readme",
+	"keywords": [
+		"cli",
+		"cac",
+		"ora",
+		"spinner",
+		"picocolors",
+		"colors",
+		"log-symbols",
+		"boxen",
+		"clack",
+		"prompts",
+		"terminal",
+		"command-line"
+	],
+	"engines": {
+		"node": ">=18"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
