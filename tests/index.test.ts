@@ -4,9 +4,11 @@ import {
 	CoraCommand,
 	color,
 	confirm,
+	createLogger,
 	intro,
 	isCancel,
 	log,
+	logger,
 	logSymbols,
 	note,
 	oraPromise,
@@ -29,6 +31,20 @@ describe("exports", () => {
 
 	it("exports wrapWithSpinner as a function", () => {
 		expect(typeof wrapWithSpinner).toBe("function");
+	});
+
+	it("exports createLogger as a function", () => {
+		expect(typeof createLogger).toBe("function");
+	});
+
+	it("exports logger as an object with log methods", () => {
+		expect(typeof logger).toBe("object");
+		expect(typeof logger.success).toBe("function");
+		expect(typeof logger.info).toBe("function");
+		expect(typeof logger.warn).toBe("function");
+		expect(typeof logger.error).toBe("function");
+		expect(typeof logger.debug).toBe("function");
+		expect(typeof logger.withTag).toBe("function");
 	});
 
 	it("exports spinner as a function", () => {
