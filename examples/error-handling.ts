@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * sado example: error handling patterns.
+ * cedok example: error handling patterns.
  *
  * Demonstrates:
  *   1. Auto-spinner with failure (error thrown in action)
@@ -17,10 +17,10 @@
 
 import { program, spinner } from "../src/index.js";
 
-const cli = program("sado-errors");
+const cli = program("cedok-errors");
 
 // ── Pattern 1: Auto-spinner handles async errors ────────────
-// When .spinner() is set, sado wraps the action: on reject,
+// When .spinner() is set, cedok wraps the action: on reject,
 // the spinner shows "✖" with the error message, then re-throws.
 
 cli

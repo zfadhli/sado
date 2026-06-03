@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * sado example: styled boxes with boxen.
+ * cedok example: styled boxes with boxen.
  *
  * Demonstrates preset methods (success, error, warning, info)
  * and custom box configuration.
@@ -12,7 +12,7 @@
 
 import { boxen, program } from "../src/index.js";
 
-const cli = program("sado-boxen");
+const cli = program("cedok-boxen");
 
 cli.command("show", "Show all boxen presets").action(() => {
 	console.log(boxen.success("Deployment complete!"));

@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * sado example: colored spinners and terminal text coloring.
+ * cedok example: colored spinners and terminal text coloring.
  *
  * Demonstrates:
  *   1. `.spinner.<color>("text")` — set the spinner frame color
@@ -17,7 +17,7 @@
 
 import { color, program } from "../src/index.js";
 
-const cli = program("sado-colors");
+const cli = program("cedok-colors");
 
 // ── Colored spinner + colored output ────────────────────────
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * sado example: styled log output with log-symbols and picocolors.
+ * cedok example: styled log output with log-symbols and picocolors.
  *
  * Demonstrates info, success, warning, and error symbols
  * paired with color for styled terminal output.
@@ -12,7 +12,7 @@
 
 import { color, logSymbols, program } from "../src/index.js";
 
-const cli = program("sado-log");
+const cli = program("cedok-log");
 
 cli
 	.command("deploy", "Simulate a deploy with styled logs")

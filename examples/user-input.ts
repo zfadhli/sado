@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 /**
- * sado example: interactive user input via @clack/prompts.
+ * cedok example: interactive user input via @clack/prompts.
  *
  * Demonstrates text, select, and confirm prompt functions
- * re-exported from sado, used together with auto-spinners.
+ * re-exported from cedok, used together with auto-spinners.
  *
  * Usage:
  *   bun run examples/user-input.ts
@@ -25,7 +25,7 @@ import {
 
 // ── Interactive setup command ───────────────────────────────
 
-const cli = program("sado-input");
+const cli = program("cedok-input");
 
 cli.command("setup", "Run interactive project setup").action(async () => {
 	intro("Project Setup");
