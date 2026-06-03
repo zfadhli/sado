@@ -1,0 +1,116 @@
+#!/usr/bin/env bun
+/**
+ * sado example: interactive user input via @clack/prompts.
+ *
+ * Demonstrates text, select, confirm, and other prompt functions
+ * re-exported from sado, used together with auto-spinners.
+ *
+ * Usage:
+ *   bun run examples/user-input.ts
+ */
+
+import {
+	cancel,
+	confirm,
+	intro,
+	isCancel,
+	note,
+	outro,
+	program,
+	select,
+	text,
+} from "../src/index.js";
+
+// ── Interactive setup command ───────────────────────────────
+
+const cli = program("sado-input");
+
+cli
+	.command("setup", "Run interactive project setup")
+	.spinner.cyan("Applying configuration...")
+	.action(async () => {
+		intro("Project Setup");
+
+		// ── Text prompt ──
+		const name = await text({
+			message: "What is your project name?",
+			placeholder: "my-project",
+			validate(value) {
+				if (!value || value.length === 0) return "Project name is required!";
+			},
+		});
+		if (isCancel(name)) {
+			cancel("Cancelled");
+			process.exit(0);
+		}
+
+		// ── Select prompt ──
+		const template = await select({
+			message: "Pick a template",
+			options: [
+				{ value: "minimal", label: "Minimal", hint: "simple starter" },
+				{ value: "standard", label: "Standard", hint: "recommended" },
+				{ value: "enterprise", label: "Enterprise", hint: "full setup" },
+			],
+		});
+		if (isCancel(template)) {
+			cancel("Cancelled");
+			process.exit(0);
+		}
+
+		// ── Confirm prompt ──
+		const install = await confirm({
+			message: "Install dependencies?",
+			active: "Yes",
+			inactive: "No",
+			initialValue: true,
+		});
+		if (isCancel(install)) {
+			cancel("Cancelled");
+			process.exit(0);
+		}
+
+		// ── Auto-spinner handles the work ──
+		console.log(`  Project: ${name}`);
+		console.log(`  Template: ${template}`);
+		console.log(`  Install: ${install ? "yes" : "no"}`);
+
+		// Simulate setup work
+		await new Promise((r) => setTimeout(r, 1500));
+
+		outro("Setup complete!");
+		note(`Created project "${name}" with ${template} template`, "Summary");
+	});
+
+cli.command("quick", "Quick demo of all prompt types").action(async () => {
+	intro("Quick Demo");
+
+	const favorite = await text({
+		message: "Favorite color?",
+		initialValue: "blue",
+	});
+	if (isCancel(favorite)) process.exit(0);
+
+	const size = await select({
+		message: "Size?",
+		options: [
+			{ value: "s", label: "Small" },
+			{ value: "m", label: "Medium" },
+			{ value: "l", label: "Large" },
+		],
+	});
+	if (isCancel(size)) process.exit(0);
+
+	const ok = await confirm({ message: "All good?" });
+	if (isCancel(ok)) process.exit(0);
+
+	if (ok) {
+		outro(`You chose ${favorite} in size ${size}!`);
+	} else {
+		cancel("Maybe next time");
+	}
+});
+
+cli.version("1.0.0");
+cli.help();
+cli.parse();

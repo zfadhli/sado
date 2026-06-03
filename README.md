@@ -2,7 +2,7 @@
 
 # sado
 
-**CLI toolkit combining cac (command parsing) + ora (terminal spinners)**
+**CLI toolkit combining cac (command parsing) + ora (terminal spinners) + @clack/prompts (interactive input)**
 
 [![npm version](https://img.shields.io/npm/v/sado?style=flat-square)](https://www.npmjs.com/package/sado)
 [![Node version](https://img.shields.io/badge/Node.js->=20-3c873a?style=flat-square)](https://nodejs.org)
@@ -38,6 +38,7 @@ cli.parse()
 - **No lock-in** — use the auto-spinner when you want it, or import `spinner()` for full manual control
 - **Colored spinners** — set the spinner frame color with `.spinner.yellow("text")` or any of 9 colors
 - **Text coloring** — re-exports `picocolors` for coloring terminal output in your actions
+- **Interactive input** — re-exports `@clack/prompts` for text, select, confirm, and more
 - **Fully typed** — written in TypeScript with complete type definitions
 
 ## Installation
@@ -115,6 +116,50 @@ cli.parse()
 ```
 
 `color` supports all picocolors functions: `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `gray`, `black`, `bold`, `dim`, `italic`, `underline`, and background variants like `bgRed`, `bgGreen`.
+
+### Interactive user input
+
+sado re-exports [`@clack/prompts`](https://github.com/natemoo-re/clack) for interactive prompts — text, select, confirm, and more. Skip the spinner/progress exports to avoid conflicts with ora.
+
+```ts
+import { program, text, select, confirm, isCancel, intro, outro } from 'sado'
+
+const cli = program('setup-tool')
+
+cli
+  .command('setup', 'Run project setup')
+  .spinner.cyan('Applying...')
+  .action(async () => {
+    intro('Project Setup')
+
+    const name = await text({
+      message: 'Project name?',
+      placeholder: 'my-project',
+      validate: (v) => v.length === 0 ? 'Required!' : undefined,
+    })
+    if (isCancel(name)) process.exit(0)
+
+    const template = await select({
+      message: 'Pick a template',
+      options: [
+        { value: 'minimal', label: 'Minimal' },
+        { value: 'standard', label: 'Standard' },
+      ],
+    })
+    if (isCancel(template)) process.exit(0)
+
+    const ok = await confirm({ message: 'Proceed?', initialValue: true })
+    if (isCancel(ok)) process.exit(0)
+    if (!ok) return
+
+    // auto-spinner wraps the actual work
+    outro('Setup complete!')
+  })
+
+cli.parse()
+```
+
+Re-exported prompts: `text`, `password`, `confirm`, `select`, `multiselect`, `selectKey`, `autocomplete`, `autocompleteMultiselect`, `multiline`, `date`, `path`, `group`, `groupMultiselect`. Plus utilities: `intro`, `outro`, `cancel`, `note`, `log`, `box`, `isCancel`.
 
 ### Manual spinner
 
@@ -221,6 +266,66 @@ console.log(color.bold(color.yellow('Warning')))
 console.log(color.bgRed(color.white(' CRITICAL ')))
 ```
 
+### Prompt functions (`text`, `select`, `confirm`, etc.)
+
+Re-exports of [`@clack/prompts`](https://github.com/natemoo-re/clack) — a collection of interactive prompt functions for user input. Each returns a promise that resolves with the user's answer.
+
+```ts
+import { text, select, confirm, isCancel } from 'sado'
+
+const name = await text({
+  message: 'Your name?',
+  placeholder: 'Ada',
+  validate: (v) => v.length < 2 && 'Too short',
+})
+if (isCancel(name)) process.exit(0)
+
+const color = await select({
+  message: 'Pick a color',
+  options: [
+    { value: 'red', label: 'Red' },
+    { value: 'blue', label: 'Blue' },
+  ],
+})
+
+const ok = await confirm({
+  message: 'Continue?',
+  active: 'Yes',
+  inactive: 'No',
+  initialValue: true,
+})
+if (!ok) process.exit(0)
+```
+
+Available prompt functions:
+
+| Function | Description |
+|---|---|
+| `text(options)` | Single-line text input |
+| `password(options)` | Masked text input |
+| `confirm(options)` | Yes/no confirmation |
+| `select(options)` | Single select from a list |
+| `multiselect(options)` | Multi-select from a list |
+| `selectKey(options)` | Key-based single select |
+| `autocomplete(options)` | Autocomplete text input |
+| `autocompleteMultiselect(options)` | Autocomplete multi-select |
+| `multiline(options)` | Multi-line text input |
+| `date(options)` | Date picker |
+| `path(options)` | File/directory path browser |
+| `group(prompts)` | Run multiple prompts sequentially |
+
+Utility functions:
+
+| Function | Description |
+|---|---|
+| `intro(text)` | Display an intro message |
+| `outro(text)` | Display an outro message |
+| `cancel(text)` | Display a cancel message |
+| `note(text, title?)` | Display a styled note |
+| `log` | Log methods: `.info()`, `.success()`, `.step()`, `.warn()`, `.error()` |
+| `box(text, opts?)` | Draw a styled box |
+| `isCancel(value)` | Check if the user cancelled (Ctrl+C) |
+
 ## Examples
 
 For a quick overview, run [`examples/overview.ts`](./examples/overview.ts):
@@ -239,5 +344,6 @@ bun run examples/args-and-options.ts greet --title Dr "Ada Lovelace"
 bun run examples/subcommands.ts db:migrate initial_setup
 bun run examples/ora-promise.ts
 bun run examples/color.ts build
+bun run examples/user-input.ts setup
 bun run examples/error-handling.ts fetch
 ```
