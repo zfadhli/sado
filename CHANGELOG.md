@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0] - 2026-06-03
+
+### Added
+
+- Interactive user input — re-exported 20 prompt and utility functions from
+  @clack/prompts, including text, select, confirm, intro, and more
+- New dependency: @clack/prompts for interactive terminal prompts
+- User input example showing text, select, confirm prompts with auto-spinners
+
+[0.4.0]: https://github.com/zfadhli/sado/compare/v0.3.0...v0.4.0
+
 ## [0.3.0] - 2026-06-03
 
 ### Added
