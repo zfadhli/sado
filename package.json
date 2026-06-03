@@ -1,0 +1,29 @@
+{
+  "name": "cora",
+  "version": "0.0.1",
+  "description": "CLI toolkit combining cac (command parsing) + ora (terminal spinners)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "example": "bun run example.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "cac": "^7.0.0",
+    "ora": "^9.4.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
