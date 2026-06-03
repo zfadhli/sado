@@ -38,12 +38,12 @@
 	"author": "zfadhli",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/zfadhli/sado.git"
+		"url": "git+https://github.com/zfadhli/kowu-cli.git"
 	},
 	"bugs": {
-		"url": "https://github.com/zfadhli/sado/issues"
+		"url": "https://github.com/zfadhli/kowu-cli/issues"
 	},
-	"homepage": "https://github.com/zfadhli/sado#readme",
+	"homepage": "https://github.com/zfadhli/kowu-cli#readme",
 	"keywords": [
 		"cli",
 		"cac",
