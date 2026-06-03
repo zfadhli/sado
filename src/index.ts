@@ -1,4 +1,29 @@
 // Re-export ora for direct manual use
+
+// Re-export @clack/prompts for interactive user input
+// (skipping spinner/progress/tasks — sado uses ora for spinners)
+export {
+	autocomplete,
+	autocompleteMultiselect,
+	box,
+	cancel,
+	confirm,
+	date,
+	group,
+	groupMultiselect,
+	intro,
+	isCancel,
+	log,
+	multiline,
+	multiselect,
+	note,
+	outro,
+	password,
+	path,
+	select,
+	selectKey,
+	text,
+} from "@clack/prompts";
 export { default as spinner, oraPromise } from "ora";
 // Re-export picocolors for terminal text coloring
 export { default as color } from "picocolors";

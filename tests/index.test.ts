@@ -2,9 +2,16 @@ import { describe, expect, it } from "bun:test";
 import {
 	CoraCommand,
 	color,
+	confirm,
+	intro,
+	isCancel,
+	log,
+	note,
 	oraPromise,
 	program,
+	select,
 	spinner,
+	text,
 } from "../src/index.js";
 
 describe("exports", () => {
@@ -30,5 +37,38 @@ describe("exports", () => {
 		expect(typeof color.red).toBe("function");
 		expect(typeof color.green).toBe("function");
 		expect(typeof color.bold).toBe("function");
+	});
+
+	describe("prompt re-exports from @clack/prompts", () => {
+		it("exports text as a function", () => {
+			expect(typeof text).toBe("function");
+		});
+
+		it("exports confirm as a function", () => {
+			expect(typeof confirm).toBe("function");
+		});
+
+		it("exports select as a function", () => {
+			expect(typeof select).toBe("function");
+		});
+
+		it("exports isCancel as a function", () => {
+			expect(typeof isCancel).toBe("function");
+		});
+
+		it("exports intro as a function", () => {
+			expect(typeof intro).toBe("function");
+		});
+
+		it("exports note as a function", () => {
+			expect(typeof note).toBe("function");
+		});
+
+		it("exports log as an object with log methods", () => {
+			expect(typeof log).toBe("object");
+			expect(typeof log.info).toBe("function");
+			expect(typeof log.success).toBe("function");
+			expect(typeof log.error).toBe("function");
+		});
 	});
 });
