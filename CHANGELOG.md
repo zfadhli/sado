@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.12.0] - 2026-06-03
+
+### Added
+
+- Optional file transport — `createLogger({ file: "app.log" })` appends
+  plain-text log lines with timestamps to a file
+- Injectable stdout/stderr — pass custom output functions via `stdout`
+  and `stderr` options for testing or redirection
+
+### Fixed
+
+- `logger.level = "warn"` now correctly changes the log level at runtime
+
+### Changed
+
+- Reduced logger internal complexity — `write()` extracted into a closure,
+  eliminating ~40 lines of parameter boilerplate
+
+[0.12.0]: https://github.com/zfadhli/kowu-cli/compare/v0.11.0...v0.12.0
+
 ## [0.11.0] - 2026-06-03
 
 ### Added
