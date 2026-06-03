@@ -1,4 +1,4 @@
-import { program, spinner } from "./src/index.js";
+import { program, spinner } from "../src/index.js";
 
 const cli = program("my-cli");
 
